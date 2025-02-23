@@ -390,7 +390,7 @@ const EventRegistration = () => {
       team: "Solo or Team of 2",
       description: "A unique challenge that blends problem-solving with navigation. Participants must make their way through a virtual 3D maze, encountering checkpoints where puzzles await. Only those who solve all challenges and successfully submit their final solution will emerge victorious!",
       status: 'open',
-      prize: "Exciting cash prizes!",
+      prize: "Exciting prizes!",
       path: "/mazerift"
     },
     {
@@ -400,7 +400,7 @@ const EventRegistration = () => {
       team: "Team of 2",
       description: "A dynamic decryption challenge that tests participants' problem-solving skills. In Round 1, individuals tackle encryption-based questions, while Round 2 presents interconnected puzzles hidden within QR-coded images. The quickest to decode all challenges emerges as the winner!",
       status: 'open',
-      prize: "Exciting cash prizes!",
+      prize: "Exciting prizes!",
       path: "/decipher"
     },
     {
@@ -410,7 +410,7 @@ const EventRegistration = () => {
       team: "Individual Participation",
       description: "A thrilling two-day online challenge where participants race against time to solve a series of mind-bending puzzles. With each level increasing in difficulty, only the fastest and sharpest minds will conquer all levels and claim victory!",
       status: 'open',
-      prize: "Exciting cash prizes!",
+      prize: "Exciting prizes!",
       path: "/odyssey"
     }
   ].map((event, index) => (
