@@ -92,8 +92,8 @@ const EventRegistration = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const openingDate = new Date('2025-02-26T00:00:00');
-    const closingDate = new Date('2025-02-27T23:59:59');
+    const openingDate = new Date('2025-02-23T00:00:00');
+    const closingDate = new Date('2025-03-04T23:59:59');
 
     const calculateTimeLeft = () => {
       const now = new Date();
@@ -387,7 +387,7 @@ const EventRegistration = () => {
       title: "Mazerift",
       icon: GitBranch,
       date: "4th March 2025",
-      team: "Team of 2-3 Members",
+      team: "Solo or Team of 2",
       description: "A unique challenge that blends problem-solving with navigation. Participants must make their way through a virtual 3D maze, encountering checkpoints where puzzles await. Only those who solve all challenges and successfully submit their final solution will emerge victorious!",
       status: 'open',
       prize: "Exciting cash prizes!",
@@ -397,7 +397,7 @@ const EventRegistration = () => {
       title: "Decipher",
       icon: Search,
       date: "5th March 2025",
-      team: "Solo or Team of 2",
+      team: "Team of 2",
       description: "A dynamic decryption challenge that tests participants' problem-solving skills. In Round 1, individuals tackle encryption-based questions, while Round 2 presents interconnected puzzles hidden within QR-coded images. The quickest to decode all challenges emerges as the winner!",
       status: 'open',
       prize: "Exciting cash prizes!",
