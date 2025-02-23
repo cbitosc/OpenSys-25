@@ -1,0 +1,11 @@
+dist
+node_modules
+bun.lockb
+
+
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+
+.vite
+.eslintcache
