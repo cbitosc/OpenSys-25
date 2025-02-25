@@ -49,7 +49,17 @@ const validateEmail = (email) => {
   return emailRegex.test(email);
 };
 
-const Input = memo(({ icon: Icon, field, label, type = "text", value, onChange, options, error, isCheckbox = false, ...props }) => (
+const Input = memo(({ icon: Icon, field, label, type = "text", value, onChange, options, error, isCheckbox = false, ...props }) => {
+  // iOS detection
+  const [isIOS, setIsIOS] = useState(false);
+  
+  useEffect(() => {
+    // Check if device is iOS
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    setIsIOS(/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream);
+  }, []);
+
+  return (
     <div className="space-y-1">
       {isCheckbox ? (
         <div className="flex items-center space-x-3">
@@ -71,30 +81,44 @@ const Input = memo(({ icon: Icon, field, label, type = "text", value, onChange, 
         </div>
       ) : (
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none isolate z-10">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
             <Icon className={`h-5 w-5 ${error ? 'text-red-400' : 'text-purple-300'} transform-gpu will-change-transform`} />
           </div>
+          
           {options && !isCheckbox ? (
-            <select
-              value={value}
-              onChange={(e) => onChange(field, e.target.value)}
-              className={`block w-full pl-10 pr-3 py-2.5 border ${error ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-[#FF0096]'} rounded-lg bg-white/5 text-white focus:outline-none focus:ring-2 focus:border-transparent backdrop-blur-sm`}
-              required
-            >
-              <option value="">Select {label}</option>
-              {options.map(option => (
-                <option key={option} value={option} className="bg-gray-800">
-                  {option}
-                </option>
-              ))}
-            </select>
+            <>
+              <select
+                value={value}
+                onChange={(e) => onChange(field, e.target.value)}
+                className={`block w-full pl-10 pr-8 py-2.5 border ${
+                  error ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-[#FF0096]'
+                } rounded-lg ${isIOS ? 'bg-gray-800' : 'bg-white/5 backdrop-blur-sm'} text-white focus:outline-none focus:ring-2 focus:border-transparent appearance-none`}
+                required
+                style={isIOS ? { fontSize: '16px' } : {}}
+              >
+                <option value="" className="bg-gray-800">Select {label}</option>
+                {options.map(option => (
+                  <option key={option} value={option} className="bg-gray-800">
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </>
           ) : (
             <input
               type={type}
               value={value}
               onChange={(e) => onChange(field, e.target.value)}
-              className={`block w-full pl-10 pr-3 py-2.5 border ${error ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-[#FF0096]'} rounded-lg bg-white/5 text-white placeholder-purple-200/50 focus:outline-none focus:ring-2 focus:border-transparent backdrop-blur-sm`}
+              className={`block w-full pl-10 pr-3 py-2.5 border ${
+                error ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-[#FF0096]'
+              } rounded-lg ${isIOS ? 'bg-gray-800' : 'bg-white/5 backdrop-blur-sm'} text-white placeholder-purple-200/50 focus:outline-none focus:ring-2 focus:border-transparent`}
               placeholder={label}
+              style={isIOS ? { fontSize: '16px' } : {}}
               {...props}
             />
           )}
@@ -102,7 +126,8 @@ const Input = memo(({ icon: Icon, field, label, type = "text", value, onChange, 
       )}
       {error && <p className="text-red-400 text-sm pl-2">{error}</p>}
     </div>
-  ));
+  );
+});
 
 const PostRegistrationOptions = ({ onSignOut }) => {
     const [shareResult, setShareResult] = useState('');
