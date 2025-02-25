@@ -667,10 +667,7 @@ const EventRegistration = () => {
             <div className="flex flex-col items-center justify-center">
               <Logos />
               <div className="mt-6 text-center w-full">
-                <EncryptedText 
-                  text="COPYRIGHT © 2025 COSC. ALL RIGHTS RESERVED." 
-                  className="text-sm text-purple-100/60"
-                />
+                
               </div>
             </div>
           </div>
