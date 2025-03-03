@@ -454,13 +454,12 @@ const EventRegistration = () => {
 
         <div className="mt-auto">
           <button
-            onClick={() => handleRegistration(event.path)}
-            className="w-full py-2.5 rounded-full bg-[rgb(255,0,150)] text-white hover:bg-[rgb(255,0,150)]/90 
-            hover:scale-[1.02] transform-gpu active:scale-95 transition-all duration-300 font-medium
-            shadow-[0_0_15px_rgba(255,0,150,0.5)] hover:shadow-[0_0_20px_rgba(255,0,150,0.7)]
-            animate-pulse-subtle backdrop-blur-sm"
+            disabled={true}
+            className="w-full py-2.5 rounded-full bg-gray-500 text-white/70
+            transform-gpu transition-all duration-300 font-medium
+            backdrop-blur-sm cursor-not-allowed"
           >
-            Register Now
+            Registration Closed
           </button>
         </div>
       </div>

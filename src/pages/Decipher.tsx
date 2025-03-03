@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Mail, User, Phone, GraduationCap, Calendar, Hash, Sparkles, Share2, ListChecks, MessageCircle, ArrowRight, AlertTriangle } from 'lucide-react';
+import { Mail, User, Phone, GraduationCap, Calendar, Hash, Sparkles, Share2, ListChecks, MessageCircle, ArrowRight, AlertTriangle, XCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const BRANCH_OPTIONS = [
@@ -482,38 +482,18 @@ const validatePhone = (phone) => {
               A thrilling decryption challenge—crack the codes and emerge victorious!
               </p>
             </div>
-    
-            <form onSubmit={handleSubmit} className="space-y-8 bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
-          <ParticipantFields 
-            number={1} 
-            formData={formData} 
-            onInputChange={handleInputChange}
-            errors={validationErrors}
-          />
-          <ParticipantFields 
-            number={2} 
-            formData={formData} 
-            onInputChange={handleInputChange}
-            errors={validationErrors}
-          />
 
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg">
-              {error}
+            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
+              <div className="text-center space-y-4">
+                <div className="inline-block p-2 rounded-full bg-red-500/20 text-red-400 mb-4">
+                  <XCircle className="w-8 h-8" />
+                </div>
+                <h2 className="text-3xl font-bold text-white">Registration Closed</h2>
+                <p className="text-white/80 max-w-2xl mx-auto">
+                  Thank you for your interest! The registration period for Decipher has ended.
+                </p>
+              </div>
             </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 rounded-full bg-[rgb(255,0,150)] text-white hover:bg-[rgb(255,0,150)]/90 
-              hover:scale-[1.02] transform-gpu active:scale-95 transition-all duration-300 font-medium
-              shadow-[0_0_15px_rgba(255,0,150,0.5)] hover:shadow-[0_0_20px_rgba(255,0,150,0.7)]
-              backdrop-blur-sm ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {loading ? 'Registering...' : 'Register Now'}
-          </button>
-        </form>
           </div>
         </div>
       );

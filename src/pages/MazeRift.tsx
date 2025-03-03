@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Mail, User, Phone, GraduationCap, Calendar, Hash, Sparkles, Share2, ListChecks, MessageCircle, ArrowRight, AlertTriangle, UserPlus, UserMinus } from 'lucide-react';
+import { Mail, User, Phone, GraduationCap, Calendar, Hash, Sparkles, Share2, ListChecks, MessageCircle, ArrowRight, AlertTriangle, UserPlus, UserMinus, XCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const COLLEGE_OPTIONS = ['CBIT', 'Other'];
@@ -311,157 +311,6 @@ const PostRegistrationOptions = ({ onRegisterAnother }) => {
 };
 
 const MazeriftRegistration = () => {
-    const emptyParticipant = {
-        name: '',
-        email: '',
-        college: '',
-        branch: '',
-        phone: '',
-        rollNumber: '',
-        year: ''
-      };
-
-  const initialFormState = {
-    participant1: { ...emptyParticipant },
-    participant2: { ...emptyParticipant }
-  };
-
-  const [formData, setFormData] = useState(initialFormState);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
-  const [isRegistered, setIsRegistered] = useState(false);
-  const [validationErrors, setValidationErrors] = useState({});
-  const [showSecondParticipant, setShowSecondParticipant] = useState(false);
-
-  useEffect(() => {
-    const savedData = localStorage.getItem('participant1Data');
-    const registrationStatus = localStorage.getItem('registeredForMazerift');
-    
-    if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-        setFormData(prev => ({
-          ...prev,
-          participant1: parsedData
-        }));
-      } catch (e) {
-        console.error('Error parsing saved data:', e);
-      }
-    }
-    
-    setIsRegistered(registrationStatus === 'true');
-  }, []);
-
-  const GOOGLE_SCRIPT_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL_MAZERIFT;
-  const validateForm = () => {
-    const errors = {};
-    let isValid = true;
-
-    errors.participant1 = {};
-    if (!validatePhone(formData.participant1.phone)) {
-      errors.participant1.phone = 'Please enter a valid 10-digit phone number';
-      isValid = false;
-    }
-    if (!validateEmail(formData.participant1.email)) {
-      errors.participant1.email = 'Please enter a valid email address';
-      isValid = false;
-    }
-
-    if (showSecondParticipant) {
-      errors.participant2 = {};
-      if (!validatePhone(formData.participant2.phone)) {
-        errors.participant2.phone = 'Please enter a valid 10-digit phone number';
-        isValid = false;
-      }
-      if (!validateEmail(formData.participant2.email)) {
-        errors.participant2.email = 'Please enter a valid email address';
-        isValid = false;
-      }
-    }
-
-    setValidationErrors(errors);
-    return isValid;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    
-    if (!validateForm()) {
-      setError('Please fix the validation errors before submitting.');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const dataToSubmit = {
-        participant1: formData.participant1,
-        ...(showSecondParticipant && { participant2: formData.participant2 })
-      };
-
-      const response = await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSubmit),
-      });
-
-      localStorage.setItem('participant1Data', JSON.stringify(formData.participant1));
-      localStorage.setItem('registeredForMazerift', 'true');
-      setSuccess(true);
-      setIsRegistered(true);
-      setFormData(initialFormState);
-    } catch (err) {
-      setError('Failed to submit registration. Please try again.');
-      console.error('Registration error:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleInputChange = (participant, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [participant]: {
-        ...prev[participant],
-        [field]: value
-      }
-    }));
-
-    setValidationErrors(prev => ({
-      ...prev,
-      [participant]: {
-        ...prev[participant],
-        [field]: undefined
-      }
-    }));
-  };
-
-  const toggleSecondParticipant = () => {
-    setShowSecondParticipant(!showSecondParticipant);
-    if (!showSecondParticipant) {
-      setFormData(prev => ({
-        ...prev,
-        participant2: { ...emptyParticipant }
-      }));
-    }
-  };
-
-  if (isRegistered) {
-    return <PostRegistrationOptions onRegisterAnother={() => {
-      localStorage.removeItem('registeredForMazerift');
-      localStorage.removeItem('participant1Data');
-      setIsRegistered(false);
-      setSuccess(false);
-      setFormData(initialFormState);
-      setShowSecondParticipant(false);
-    }} />;
-  }
-
   return (
     <div className="min-h-screen font-sora p-6">
       <div className="max-w-4xl mx-auto pt-10">
@@ -482,65 +331,17 @@ const MazeriftRegistration = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8 bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
-          <ParticipantFields 
-            number={1} 
-            formData={formData} 
-            onInputChange={handleInputChange}
-            errors={validationErrors}
-          />
-          <div className="bg-purple-500/10 border border-purple-500/20 text-purple-300 px-4 py-3 rounded-lg flex items-center gap-2">
-            <span>You can register individually or team up with one other participant to register as a duo.</span>
-          </div>
-
-          <div className="flex justify-center">
-            <button
-              type="button"
-              onClick={toggleSecondParticipant}
-              className="flex items-center gap-2 px-6 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-300"
-            >
-              {showSecondParticipant ? (
-                <>
-                  <UserMinus className="w-5 h-5" />
-                  Remove Second Participant
-                </>
-              ) : (
-                <>
-                  <UserPlus className="w-5 h-5" />
-                  Add Second Participant
-                </>
-              )}
-            </button>
-          </div>
-
-          {showSecondParticipant && (
-            <ParticipantFields 
-              number={2} 
-              formData={formData} 
-              onInputChange={handleInputChange}
-              errors={validationErrors}
-            />
-          )}
-
-
-
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg">
-              {error}
+        <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
+          <div className="text-center space-y-4">
+            <div className="inline-block p-2 rounded-full bg-red-500/20 text-red-400 mb-4">
+              <XCircle className="w-8 h-8" />
             </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 rounded-full bg-[rgb(255,0,150)] text-white hover:bg-[rgb(255,0,150)]/90 
-              hover:scale-[1.02] transform-gpu active:scale-95 transition-all duration-300 font-medium
-              shadow-[0_0_15px_rgba(255,0,150,0.5)] hover:shadow-[0_0_20px_rgba(255,0,150,0.7)]
-              backdrop-blur-sm ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {loading ? 'Registering...' : showSecondParticipant ? 'Register as a duo' : 'Register Solo'}
-          </button>
-        </form>
+            <h2 className="text-3xl font-bold text-white">Registration Closed</h2>
+            <p className="text-white/80 max-w-2xl mx-auto">
+              Thank you for your interest! The registration period for Mazerift has ended.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

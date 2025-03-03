@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Mail, User, Phone, GraduationCap, Calendar, Hash, Key, Share2, ListChecks, MessageCircle, ArrowRight, AlertTriangle } from 'lucide-react';
+import { Mail, User, Phone, GraduationCap, Calendar, Hash, Key, Share2, ListChecks, MessageCircle, ArrowRight, AlertTriangle, XCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { 
@@ -265,332 +265,40 @@ const PostRegistrationOptions = ({ onSignOut }) => {
   };
 
   const OdysseyRegistration = () => {
-    const initialFormState = {
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        college: '',
-        branch: '',
-        phone: '',
-        rollNumber: '',
-        year: ''
-      };
-  
-    const [formData, setFormData] = useState(initialFormState);
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const [error, setError] = useState('');
-    const [validationErrors, setValidationErrors] = useState({});
-    const [user, setUser] = useState(null);
-  
-    useEffect(() => {
-      const loadSavedData = () => {
-        const participant1Data = localStorage.getItem('participant1Data');
-        
-        try {
-          if (participant1Data) {
-            const p1Data = JSON.parse(participant1Data);
-            setFormData(prevData => ({
-              ...prevData,
-              name: p1Data.name || '',
-              email: p1Data.email || '',
-              branch: p1Data.branch || '',
-              phone: p1Data.phone || '',
-              rollNumber: p1Data.rollNumber || '',
-              year: p1Data.year || ''
-            }));
-          }
-        } catch (e) {
-          console.error('Error parsing saved form data:', e);
-        }
-      };
-  
-      loadSavedData();
-    }, []);
-  
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        setUser(user);
-        if (user) {
-          checkRegistrationStatus(user.email);
-        }
-      });
-  
-      return () => unsubscribe();
-    }, []);
-  
-    const checkRegistrationStatus = async (email) => {
-      try {
-        const q = query(collection(db, "odysseyParticipants"), where("email", "==", email));
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
-          setSuccess(true);
-          localStorage.setItem('registeredForOdyssey', 'true');
-        }
-      } catch (error) {
-        console.error("Error checking registration status:", error);
-      }
-    };
-  
-    const validateForm = () => {
-      const errors = {};
-      let isValid = true;
-  
-      if (!validatePhone(formData.phone)) {
-        errors.phone = 'Please enter a valid 10-digit phone number';
-        isValid = false;
-      }
-  
-      if (!validateEmail(formData.email)) {
-        errors.email = 'Please enter a valid email address';
-        isValid = false;
-      }
-  
-      if (formData.password?.length < 6) {
-        errors.password = 'Password must be at least 6 characters';
-        isValid = false;
-      }
-  
-      if (formData.password !== formData.confirmPassword) {
-        errors.confirmPassword = 'Passwords do not match';
-        isValid = false;
-      }
-  
-      setValidationErrors(errors);
-      return isValid;
-    };
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setError('');
-      
-      if (!validateForm()) {
-        setError('Please fix the validation errors before submitting.');
-        return;
-      }
-  
-      setLoading(true);
-  
-      try {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          formData.email,
-          formData.password
-        );
-  
-        const participantData = {
-          name: formData.name,
-          email: formData.email,
-          branch: formData.branch,
-          phone: formData.phone,
-          rollNumber: formData.rollNumber,
-          year: formData.year,
-          timestamp: new Date(),
-          userId: userCredential.user.uid
-        };
-  
-        await addDoc(collection(db, "odysseyParticipants"), participantData);
-        
-        const dataToSave = {
-          name: formData.name,
-          email: formData.email,
-          branch: formData.branch,
-          phone: formData.phone,
-          rollNumber: formData.rollNumber,
-          year: formData.year
-        };
-        localStorage.setItem('participant1Data', JSON.stringify(dataToSave));
-        localStorage.setItem('registeredForOdyssey', 'true');
-        
-        setSuccess(true);
-        setFormData(initialFormState);
-      } catch (err) {
-        setError(err.message);
-        console.error('Registration error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    const handleInputChange = (field, value) => {
-      setFormData(prev => ({
-        ...prev,
-        [field]: value
-      }));
-  
-      setValidationErrors(prev => ({
-        ...prev,
-        [field]: undefined
-      }));
-    };
-  
-    const handleSignOut = async () => {
-      try {
-        await signOut(auth);
-        localStorage.removeItem('participant1Data');
-        localStorage.removeItem('registeredForOdyssey');
-        setSuccess(false);
-        setFormData(initialFormState);
-      } catch (error) {
-        console.error("Error signing out:", error);
-      }
-    };
-
-  if (success) {
     return (
       <div className="min-h-screen font-sora p-6">
-        <div className="max-w-4xl mx-auto pt-5">
-          <PostRegistrationOptions onSignOut={handleSignOut} />
+        <div className="max-w-4xl mx-auto pt-10">
+          <div className="text-center mb-10">
+            <div className="inline-block mb-4 pb-5">
+              <div className="flex gap-3 items-center">
+                <img src="/LogoCOSC.svg" alt="COSC" className="h-8 sm:h-12" />
+                <p className="text-lg sm:text-xl">|</p>
+                <img src="/logo4x.png" alt="OpenSys" className="h-8 sm:h-12" />
+              </div>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-[#E5DEFF] bg-clip-text text-transparent">
+              Odyssey
+            </h1>
+            <div className="w-24 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0 mx-auto mb-6" />
+            <p className="text-white/80 max-w-2xl mx-auto">
+              A fast-paced, two-day online challenge—solve all levels first to win!
+            </p>
+          </div>
+  
+          <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
+            <div className="text-center space-y-4">
+              <div className="inline-block p-2 rounded-full bg-red-500/20 text-red-400 mb-4">
+                <XCircle className="w-8 h-8" />
+              </div>
+              <h2 className="text-3xl font-bold text-white">Registration Closed</h2>
+              <p className="text-white/80 max-w-2xl mx-auto">
+                Thank you for your interest! The registration period for Odyssey has ended.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
-  }
-
-  return (
-    <div className="min-h-screen font-sora p-6">
-      <div className="max-w-4xl mx-auto pt-10">
-        <div className="text-center mb-10">
-          <div className="inline-block mb-4 pb-5">
-            <div className="flex gap-3 items-center">
-              <img src="/LogoCOSC.svg" alt="COSC" className="h-8 sm:h-12" />
-              <p className="text-lg sm:text-xl">|</p>
-              <img src="/logo4x.png" alt="OpenSys" className="h-8 sm:h-12" />
-            </div>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-[#E5DEFF] bg-clip-text text-transparent">
-            Odyssey
-          </h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0 mx-auto mb-6" />
-          <p className="text-white/80 max-w-2xl mx-auto">
-            A fast-paced, two-day online challenge—solve all levels first to win!
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6 bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input 
-              icon={User} 
-              field="name" 
-              label="Full Name" 
-              value={formData.name}
-              onChange={handleInputChange}
-              error={validationErrors.name}
-              required 
-            />
-            <Input 
-              icon={Mail} 
-              field="email" 
-              label="Email" 
-              type="email" 
-              value={formData.email}
-              onChange={handleInputChange}
-              error={validationErrors.email}
-              required 
-            />
-            <Input 
-              icon={Key} 
-              field="password" 
-              label="Password" 
-              type="password" 
-              value={formData.password}
-              onChange={handleInputChange}
-              error={validationErrors.password}
-              required 
-            />
-            <Input 
-              icon={Key} 
-              field="confirmPassword" 
-              label="Confirm Password" 
-              type="password" 
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              error={validationErrors.confirmPassword}
-              required 
-            />
-            <Input 
-              icon={GraduationCap} 
-              field="college" 
-              label="College" 
-              value={formData.college}
-              onChange={handleInputChange}
-              options={COLLEGE_OPTIONS}
-              isCheckbox={true}
-              error={validationErrors.college}
-              required 
-            />
-            <Input 
-              icon={GraduationCap} 
-              field="branch" 
-              label="Branch" 
-              value={formData.branch}
-              onChange={handleInputChange}
-              options={BRANCH_OPTIONS}
-              error={validationErrors.branch}
-              required 
-            />
-            <Input 
-              icon={Phone} 
-              field="phone" 
-              label="Phone Number" 
-              value={formData.phone}
-              onChange={handleInputChange}
-              error={validationErrors.phone}
-              required 
-            />
-            <Input 
-              icon={Hash} 
-              field="rollNumber" 
-              label="Roll Number" 
-              value={formData.rollNumber}
-              onChange={handleInputChange}
-              error={validationErrors.rollNumber}
-              required 
-            />
-            <Input 
-              icon={Calendar} 
-              field="year" 
-              label="Year" 
-              value={formData.year}
-              onChange={handleInputChange}
-              options={YEAR_OPTIONS}
-              error={validationErrors.year}
-              required 
-            />
-          </div>
-          <div className="bg-purple-500/10 border border-purple-500/20 text-purple-300 px-4 py-3 rounded-lg flex items-center gap-2">
-            <Key className="w-5 h-5 flex-shrink-0" />
-            <span>Remember your credentials! You'll need them to access the game.</span>
-          </div>
-
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 rounded-full bg-[rgb(255,0,150)] text-white hover:bg-[rgb(255,0,150)]/90 
-              hover:scale-[1.02] transform-gpu active:scale-95 transition-all duration-300 font-medium
-              shadow-[0_0_15px_rgba(255,0,150,0.5)] hover:shadow-[0_0_20px_rgba(255,0,150,0.7)]
-              backdrop-blur-sm ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {loading ? (
-              <div className="flex items-center justify-center gap-2">
-                <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
-                <span>Registering...</span>
-              </div>
-            ) : (
-              'Register Now'
-            )}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-};
+  };
 
 export default OdysseyRegistration;
