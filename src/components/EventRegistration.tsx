@@ -389,7 +389,7 @@ const EventRegistration = () => {
       date: "4th March 2025",
       team: "Solo or Team of 2",
       description: "A unique challenge that blends problem-solving with navigation. Participants must make their way through a virtual 3D maze, encountering checkpoints where puzzles await. Only those who solve all challenges and successfully submit their final solution will emerge victorious!",
-      status: 'open',
+      status: 'closed',
       prize: "Exciting prizes!",
       path: "/mazerift"
     },
@@ -399,7 +399,7 @@ const EventRegistration = () => {
       date: "5th March 2025",
       team: "Team of 2",
       description: "A dynamic decryption challenge that tests participants' problem-solving skills. In Round 1, individuals tackle encryption-based questions, while Round 2 presents interconnected puzzles hidden within QR-coded images. The quickest to decode all challenges emerges as the winner!",
-      status: 'open',
+      status: 'closed',
       prize: "Exciting prizes!",
       path: "/decipher"
     },
@@ -453,14 +453,25 @@ const EventRegistration = () => {
         </div>
 
         <div className="mt-auto">
-          <button
-            disabled={true}
-            className="w-full py-2.5 rounded-full bg-gray-500 text-white/70
-            transform-gpu transition-all duration-300 font-medium
-            backdrop-blur-sm cursor-not-allowed"
-          >
-            Registration Closed
-          </button>
+          {event.status === 'open' ? (
+            <button
+              onClick={() => handleRegistration(event.path)}
+              className="w-full py-2.5 rounded-full bg-[rgb(255,0,150)] text-white
+              transform-gpu transition-all duration-300 font-medium hover:scale-[1.02]
+              shadow-[0_0_15px_rgba(255,0,150,0.5)] backdrop-blur-sm"
+            >
+              Register Now
+            </button>
+          ) : (
+            <button
+              disabled={true}
+              className="w-full py-2.5 rounded-full bg-gray-500 text-white/70
+              transform-gpu transition-all duration-300 font-medium
+              backdrop-blur-sm cursor-not-allowed"
+            >
+              Registration Closed
+            </button>
+          )}
         </div>
       </div>
     </div>
